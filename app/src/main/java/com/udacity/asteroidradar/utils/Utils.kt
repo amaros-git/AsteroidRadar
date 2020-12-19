@@ -3,6 +3,7 @@ package com.udacity.asteroidradar.utils
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
 import org.json.JSONObject
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -53,5 +54,30 @@ private fun getNextSevenDaysFormattedDates(): ArrayList<String> {
         calendar.add(Calendar.DAY_OF_YEAR, 1)
     }
 
+    /*Timber.i("formattedDateList = ")
+    formattedDateList.forEach {
+        Timber.i(it)
+    }*/
+
     return formattedDateList
+}
+
+fun getCurrentDateString(format: String): String {
+    val calendar = Calendar.getInstance()
+    val currentTime = calendar.time
+    val dateFormat = SimpleDateFormat(format, Locale.getDefault())
+
+    return dateFormat.format(currentTime)
+}
+
+/**
+ * returns future date in string and format, which is current date + days
+ */
+fun getFutureDateString(format: String, days: Int): String {
+    val calendar = Calendar.getInstance()
+    calendar.add(Calendar.DAY_OF_YEAR, days)
+    val currentTime = calendar.time
+    val dateFormat = SimpleDateFormat(format, Locale.getDefault())
+
+    return dateFormat.format(currentTime)
 }

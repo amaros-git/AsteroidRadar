@@ -7,6 +7,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
+import com.udacity.asteroidradar.utils.parseAsteroidsJsonResult
+import org.json.JSONException
+import org.json.JSONObject
 import timber.log.Timber
 
 class MainFragment : Fragment() {
@@ -23,7 +26,14 @@ class MainFragment : Fragment() {
         binding.viewModel = viewModel
 
         viewModel.response.observe(viewLifecycleOwner) {response ->
-            Timber.i(response)
+            try {
+                val asteroids = parseAsteroidsJsonResult(JSONObject(response))
+                asteroids.forEach {
+                    Timber.i(it.toString())
+                }
+            } catch (e: JSONException) {
+                Timber.e("Cannot parse: ${e.message}")
+            }
         }
 
         setHasOptionsMenu(true)

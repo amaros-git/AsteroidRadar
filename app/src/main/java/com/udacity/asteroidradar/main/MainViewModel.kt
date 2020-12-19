@@ -6,9 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.network.RadarApi
+import com.udacity.asteroidradar.utils.getCurrentDateString
+import com.udacity.asteroidradar.utils.getFutureDateString
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import timber.log.Timber
+import java.util.*
 
 class MainViewModel : ViewModel() {
 
@@ -21,18 +24,23 @@ class MainViewModel : ViewModel() {
     }
 
     private fun getAsteroids() {
+        val startDate = getCurrentDateString(Constants.API_QUERY_DATE_FORMAT)
+        Timber.i("startDate =  $startDate")
+        val endDate = getFutureDateString(Constants.API_QUERY_DATE_FORMAT, 7)
+        Timber.i("startDate =  $endDate")
+
         viewModelScope.launch {
             try {
                 val response =
                     RadarApi.retrofitService.getAsteroids(
-                        "2020-01-01",
-                        "2020-01-08",
+                        startDate,
+                        endDate,
                         Constants.PRIVATE_KEY
                     )
                 _response.value = response
             }
             catch (e: HttpException) {
-                Timber.i("Exception occurred: ${e.message}")
+                Timber.e("Exception occurred: ${e.message}")
             }
         }
     }
