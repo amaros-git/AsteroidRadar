@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
+import com.udacity.asteroidradar.repository.AsteroidRadarRepository
 import com.udacity.asteroidradar.utils.parseAsteroidsJsonResult
 import org.json.JSONException
 import org.json.JSONObject
@@ -29,10 +30,13 @@ class MainFragment : Fragment() {
 
         binding.viewModel = viewModel
 
-        viewModel.asteroids.observe(viewLifecycleOwner) { asteroids ->
-            asteroids.forEach {
-                Timber.i(it.toString())
-            }
+        val adapter = AsteroidRecyclerAdapter(AsteroidClickListener {
+            Timber.i("Clicked on id = $it")
+        })
+        binding.asteroidRecycler.adapter = adapter
+
+        viewModel.asteroids.observe(viewLifecycleOwner) {
+            adapter.addHeaderAndSubmitList(it)
         }
 
         setHasOptionsMenu(true)

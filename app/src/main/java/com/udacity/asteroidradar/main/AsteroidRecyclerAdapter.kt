@@ -10,6 +10,9 @@ import com.udacity.asteroidradar.databinding.HeaderBinding
 import com.udacity.asteroidradar.databinding.ListItemAsteroidBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 private const val ITEM_VIEW_TYPE_HEADER = 0
 private const val ITEM_VIEW_TYPE_ITEM = 1
@@ -28,7 +31,12 @@ class AsteroidRecyclerAdapter(private var clickListener: AsteroidClickListener) 
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
+        when (holder) {
+            is ViewHolder -> {
+                val asteroidItem = getItem(position) as ViewDataItem.AsteroidItem
+                holder.bind(asteroidItem.asteroid, clickListener)
+            }
+        }
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -36,7 +44,21 @@ class AsteroidRecyclerAdapter(private var clickListener: AsteroidClickListener) 
             is ViewDataItem.Header -> ITEM_VIEW_TYPE_HEADER
             is ViewDataItem.AsteroidItem -> ITEM_VIEW_TYPE_ITEM
         }
+    }
 
+    fun addHeaderAndSubmitList(list: List<Asteroid>?) {
+        adapterScope.launch {
+            val items = when (list) {
+                null -> listOf(ViewDataItem.Header)
+                else -> listOf(ViewDataItem.Header) + list.map { ViewDataItem.AsteroidItem(it) }
+            }
+            items.forEach {
+                Timber.i(it.toString())
+            }
+            withContext(Dispatchers.Main) {
+                submitList(items)
+            }
+        }
     }
 
     class ViewHolder private constructor(private val binding: ListItemAsteroidBinding) :
