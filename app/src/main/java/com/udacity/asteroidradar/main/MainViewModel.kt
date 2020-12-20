@@ -38,5 +38,4 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             throw IllegalArgumentException("Unable to construct viewModel")
         }
     }
-
 }
