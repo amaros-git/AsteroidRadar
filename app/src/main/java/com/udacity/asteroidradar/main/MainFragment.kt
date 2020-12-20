@@ -25,14 +25,9 @@ class MainFragment : Fragment() {
 
         binding.viewModel = viewModel
 
-        viewModel.response.observe(viewLifecycleOwner) {response ->
-            try {
-                val asteroids = parseAsteroidsJsonResult(JSONObject(response))
-                asteroids.forEach {
-                    Timber.i(it.toString())
-                }
-            } catch (e: JSONException) {
-                Timber.e("Cannot parse: ${e.message}")
+        viewModel.asteroids.observe(viewLifecycleOwner) { asteroids ->
+            asteroids.forEach {
+                Timber.i(it.toString())
             }
         }
 
