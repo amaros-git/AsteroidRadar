@@ -6,10 +6,8 @@ import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.database.getDatabase
 import com.udacity.asteroidradar.network.AsteroidRadarApi
 import com.udacity.asteroidradar.repository.AsteroidRadarRepository
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
-import timber.log.Timber
+
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
