@@ -1,17 +1,20 @@
 package com.udacity.asteroidradar.main
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.udacity.asteroidradar.Asteroid
+import com.udacity.asteroidradar.databinding.HeaderBinding
+import com.udacity.asteroidradar.databinding.ListItemAsteroidBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 private const val ITEM_VIEW_TYPE_HEADER = 0
 private const val ITEM_VIEW_TYPE_ITEM = 1
 
-class AsteroidRecyclerAdapter (private var clickListener: AsteroidClickListener) :
+class AsteroidRecyclerAdapter(private var clickListener: AsteroidClickListener) :
     ListAdapter<ViewDataItem, RecyclerView.ViewHolder>(AsteroidDiffCallback()) {
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
@@ -24,14 +27,6 @@ class AsteroidRecyclerAdapter (private var clickListener: AsteroidClickListener)
         }
     }
 
-    class ViewHolder private constructor(val binding: ListItemSleepBinding) : RecyclerView.ViewHolder(binding.root) {
-
-    }
-
-    class Header {
-
-    }
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
     }
@@ -42,6 +37,45 @@ class AsteroidRecyclerAdapter (private var clickListener: AsteroidClickListener)
             is ViewDataItem.AsteroidItem -> ITEM_VIEW_TYPE_ITEM
         }
 
+    }
+
+    class ViewHolder private constructor(private val binding: ListItemAsteroidBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: Asteroid, clickListener: AsteroidClickListener) {
+            binding.asteroid = item
+            binding.executePendingBindings()
+            binding.clickListener = clickListener
+        }
+
+        companion object {
+            fun from(parent: ViewGroup): ViewHolder {
+                val binding = ListItemAsteroidBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                return ViewHolder(binding)
+            }
+        }
+    }
+
+    class Header private constructor(private val binding: HeaderBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: Asteroid) {
+            binding.executePendingBindings()
+
+        }
+
+        companion object {
+            fun from(parent: ViewGroup): Header {
+                val binding = HeaderBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                return Header(binding)
+            }
+        }
     }
 }
 
