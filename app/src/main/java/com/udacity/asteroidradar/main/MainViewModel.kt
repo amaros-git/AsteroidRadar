@@ -28,6 +28,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     init {
         viewModelScope.launch {
             asteroidRepository.refreshAsteroidsCache()
+        }
+        viewModelScope.launch {
             _pictureOfDay.value = asteroidRepository.getPictureOfDay()
         }
     }

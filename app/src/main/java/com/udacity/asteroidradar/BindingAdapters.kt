@@ -4,6 +4,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
+import com.squareup.picasso.Picasso
+import com.squareup.picasso.RequestCreator
 
 @BindingAdapter("statusIcon")
 fun ImageView.setAsteroidIcon(item: Asteroid?) {
@@ -16,17 +18,18 @@ fun ImageView.setAsteroidIcon(item: Asteroid?) {
 }
 
 @BindingAdapter("imageUrl")
-fun ImageView.bindImage(imgUrl: String?) {
-    setImageResource( R.drawable.ic_status_potentially_hazardous)
-    /*imgUrl?.let {
-        val imgURI = it.toUri().buildUpon().scheme("https").build()
-        Glide.with(imgView.context)
+fun bindImage(imgView: ImageView, picture: PictureOfDay?) {
+    if (picture?.mediaType == "image") {
+        val imgURI = picture.url.toUri().buildUpon().scheme("https").build()
+        Picasso.with(imgView.context)
             .load(imgURI)
-            .apply(RequestOptions()
-                .placeholder(R.drawable.loading_animation)
-                .error(R.drawable.ic_broken_image))
+            .placeholder(R.drawable.loading_animation)
+            .error(R.drawable.ic_broken_image)
             .into(imgView)
-    }*/
+
+    } else {
+        //TODO else what ?
+    }
 }
 
 @BindingAdapter("asteroidStatusImage")

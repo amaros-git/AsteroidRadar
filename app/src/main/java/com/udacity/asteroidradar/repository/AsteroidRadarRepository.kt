@@ -17,6 +17,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.HttpException
 import timber.log.Timber
+import java.net.SocketTimeoutException
 
 class AsteroidRadarRepository(
     private val database: AsteroidRadarDatabase,
@@ -42,8 +43,16 @@ class AsteroidRadarRepository(
                     endDate,
                     Constants.PRIVATE_KEY
                 )
-            } catch (e: HttpException) {
-                Timber.e("Network error: ${e.message}")
+            } catch (e: Exception) {
+                when (e.cause) {
+                    is HttpException -> {
+                        Timber.e("Network error: ${e.message}")
+                    }
+                    is SocketTimeoutException -> {
+                        Timber.e("Socket timeout: ${e.message}")
+                    }
+                    else -> Timber.e("Unexpected exception: ${e.message}")
+                }
                 ""
             }
 
@@ -60,8 +69,16 @@ class AsteroidRadarRepository(
         return withContext(Dispatchers.IO) {
             try {
                 picture.retrofitService.getPictureOfDay(Constants.PRIVATE_KEY)
-            } catch (e: HttpException) {
-                Timber.e("Network error: ${e.message}")
+            } catch (e: Exception) {
+                when (e.cause) {
+                    is HttpException -> {
+                        Timber.e("Network error: ${e.message}")
+                    }
+                    is SocketTimeoutException -> {
+                        Timber.e("Socket timeout: ${e.message}")
+                    }
+                    else -> Timber.e("Unexpected exception: ${e.message}")
+                }
                 null
             }
         }
