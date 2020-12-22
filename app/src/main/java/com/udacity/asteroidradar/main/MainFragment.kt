@@ -8,11 +8,6 @@ import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
-import com.udacity.asteroidradar.repository.AsteroidRadarRepository
-import com.udacity.asteroidradar.utils.parseAsteroidsJsonResult
-import org.json.JSONException
-import org.json.JSONObject
-import timber.log.Timber
 
 class MainFragment : Fragment() {
 
@@ -37,7 +32,7 @@ class MainFragment : Fragment() {
         binding.asteroidRecycler.adapter = adapter
 
         viewModel.asteroids.observe(viewLifecycleOwner) {
-            adapter.addHeaderAndSubmitList(it)
+            adapter.submitList(it, false)
         }
 
         setHasOptionsMenu(true)
