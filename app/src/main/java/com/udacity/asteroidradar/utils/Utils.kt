@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
+//Well, this algo fails if I use different end_date than hardcoded DEFAULT_END_DATE_DAYS :-p
+//If I have time, I will change it. Meantime will use corresponded end_date in GET request
 fun parseAsteroidsJsonResult(jsonResult: JSONObject): ArrayList<Asteroid> {
     val nearEarthObjectsJson = jsonResult.getJSONObject("near_earth_objects")
 
@@ -53,11 +55,6 @@ private fun getNextSevenDaysFormattedDates(): ArrayList<String> {
         formattedDateList.add(dateFormat.format(currentTime))
         calendar.add(Calendar.DAY_OF_YEAR, 1)
     }
-
-    /*Timber.i("formattedDateList = ")
-    formattedDateList.forEach {
-        Timber.i(it)
-    }*/
 
     return formattedDateList
 }

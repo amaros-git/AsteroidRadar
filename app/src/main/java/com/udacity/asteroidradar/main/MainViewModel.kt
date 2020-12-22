@@ -9,6 +9,9 @@ import com.udacity.asteroidradar.network.AsteroidRadarApi
 import com.udacity.asteroidradar.network.PictureApi
 import com.udacity.asteroidradar.repository.AsteroidRadarRepository
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import timber.log.Timber
+import java.net.SocketTimeoutException
 
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
@@ -25,12 +28,28 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val pictureOfDay: LiveData<PictureOfDay>
         get() = _pictureOfDay
 
+    //null means no message to show
+    private val _showToastEvent = MutableLiveData<String?>()
+    val showToastEvent: LiveData<String?>
+        get() = _showToastEvent
+
     init {
         viewModelScope.launch {
-            asteroidRepository.refreshAsteroidsCache()
-        }
-        viewModelScope.launch {
-            _pictureOfDay.value = asteroidRepository.getPictureOfDay()
+            try {
+                _pictureOfDay.value = asteroidRepository.getPictureOfDay()
+                asteroidRepository.refreshAsteroidsCache()
+            } catch (e: Exception) {
+                when (e.cause) {
+                    is HttpException -> {
+                        Timber.e("Network error: ${e.message}")
+                    }
+                    is SocketTimeoutException -> {
+                        Timber.e("Socket timeout: ${e.message}")
+                    }
+                    else -> Timber.e("Unexpected exception: ${e.message}")
+                }
+                _showToastEvent.value = "Network error, trying to display saved data"
+            }
         }
     }
 

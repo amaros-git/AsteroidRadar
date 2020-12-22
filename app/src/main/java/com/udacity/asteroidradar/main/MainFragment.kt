@@ -2,6 +2,7 @@ package com.udacity.asteroidradar.main
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -39,6 +40,12 @@ class MainFragment : Fragment() {
 
         viewModel.asteroids.observe(viewLifecycleOwner) {
             adapter.submitList(it, false)
+        }
+
+        viewModel.showToastEvent.observe(viewLifecycleOwner) {
+            it?.let {
+                Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+            }
         }
 
         setHasOptionsMenu(true)

@@ -33,56 +33,28 @@ class AsteroidRadarRepository(
     /**
      * for caching
      */
-    suspend fun refreshAsteroidsCache(): List<Asteroid> {
+    suspend fun refreshAsteroidsCache() {
         val startDate = getCurrentDateString(Constants.API_QUERY_DATE_FORMAT)
-        val endDate = getFutureDateString(Constants.API_QUERY_DATE_FORMAT, 7)
-        //Timber.i("startDate =  $endDate, endDate = $endDate")
+        val endDate = getFutureDateString(
+            Constants.API_QUERY_DATE_FORMAT,
+            Constants.DEFAULT_END_DATE_DAYS
+        )
 
         return withContext(Dispatchers.IO) {
-            val responseString = try {
-                radar.retrofitService.getAsteroids(
-                    startDate,
-                    endDate,
-                    Constants.PRIVATE_KEY
-                )
-            } catch (e: Exception) {
-                when (e.cause) {
-                    is HttpException -> {
-                        Timber.e("Network error: ${e.message}")
-                    }
-                    is SocketTimeoutException -> {
-                        Timber.e("Socket timeout: ${e.message}")
-                    }
-                    else -> Timber.e("Unexpected exception: ${e.message}")
-                }
-                ""
-            }
+            val response = radar.retrofitService.getAsteroids(
+                startDate, endDate, Constants.PRIVATE_KEY
+            )
 
-            val asteroids = parseAsteroids(responseString)
+            val asteroids = parseAsteroids(response)
 
             updateDatabase(asteroids)
-
-            asteroids
         }
     }
 
     @Nullable
-    suspend fun getPictureOfDay(): PictureOfDay? {
+    suspend fun getPictureOfDay(): PictureOfDay {
         return withContext(Dispatchers.IO) {
-            try {
-                picture.retrofitService.getPictureOfDay(Constants.PRIVATE_KEY)
-            } catch (e: Exception) {
-                when (e.cause) {
-                    is HttpException -> {
-                        Timber.e("Network error: ${e.message}")
-                    }
-                    is SocketTimeoutException -> {
-                        Timber.e("Socket timeout: ${e.message}")
-                    }
-                    else -> Timber.e("Unexpected exception: ${e.message}")
-                }
-                null
-            }
+            picture.retrofitService.getPictureOfDay(Constants.PRIVATE_KEY)
         }
     }
 
