@@ -18,8 +18,8 @@ private val moshi = Moshi.Builder()
     .build()
 
 private val okHttpClient = OkHttpClient.Builder()
-        .connectTimeout(1, TimeUnit.SECONDS)
-        .readTimeout(1, TimeUnit.SECONDS)
+        .connectTimeout(3, TimeUnit.SECONDS)
+        .readTimeout(3, TimeUnit.SECONDS)
         .build()
 
 private val retrofit = Retrofit.Builder()

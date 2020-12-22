@@ -19,6 +19,8 @@ import retrofit2.HttpException
 import timber.log.Timber
 import java.net.SocketTimeoutException
 
+//TODO all EXCEPTIONS MUST be moved into ViewModel to report to Fragment about error
+//and show some sort of toast
 class AsteroidRadarRepository(
     private val database: AsteroidRadarDatabase,
     private val radar: AsteroidRadarApi,

@@ -5,6 +5,7 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import androidx.navigation.fragment.findNavController
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 import com.udacity.asteroidradar.repository.AsteroidRadarRepository
@@ -31,17 +32,12 @@ class MainFragment : Fragment() {
         binding.viewModel = viewModel
 
         val adapter = AsteroidRecyclerAdapter(AsteroidClickListener {
-            Timber.i("Clicked on id = $it")
+            this.findNavController().navigate(MainFragmentDirections.actionShowDetail(it))
         })
         binding.asteroidRecycler.adapter = adapter
 
         viewModel.asteroids.observe(viewLifecycleOwner) {
             adapter.addHeaderAndSubmitList(it)
-        }
-
-        //TODO for test only
-        viewModel.pictureOfDay.observe(viewLifecycleOwner) {
-            Timber.i("Picture of the day: $it")
         }
 
         setHasOptionsMenu(true)

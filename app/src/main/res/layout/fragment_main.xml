@@ -32,6 +32,7 @@
                 app:srcCompat="@drawable/placeholder_picture_of_day"/>
 
             <TextView
+                style="@style/CustomHeadline6"
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

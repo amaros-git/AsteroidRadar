@@ -44,12 +44,14 @@
                     android:orientation="vertical">
 
                     <TextView
+                        style="@style/CustomHeadline5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/close_approach_data_title"
                         android:textColor="@color/default_text_color" />
 
                     <TextView
+                        style="@style/CustomSubtitle1"
                         android:id="@+id/close_approach_date"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -73,12 +75,14 @@
                         android:orientation="vertical">
 
                         <TextView
+                            style="@style/CustomHeadline6"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/absolute_magnitude_title"
                             android:textColor="@color/default_text_color" />
 
                         <TextView
+                            style="@style/CustomSubtitle1"
                             android:id="@+id/absolute_magnitude"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -98,6 +102,7 @@
                 </LinearLayout>
 
                 <TextView
+                    style="@style/CustomHeadline6"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -105,6 +110,7 @@
                     android:textColor="@color/default_text_color" />
 
                 <TextView
+                    style="@style/CustomSubtitle1"
                     android:id="@+id/estimated_diameter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -114,6 +120,7 @@
                     tools:text="0.82 km" />
 
                 <TextView
+                    style="@style/CustomHeadline6"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -121,6 +128,7 @@
                     android:textColor="@color/default_text_color" />
 
                 <TextView
+                    style="@style/CustomSubtitle1"
                     android:id="@+id/relative_velocity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -130,6 +138,7 @@
                     tools:text="11.9 km/s" />
 
                 <TextView
+                    style="@style/CustomHeadline6"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -137,6 +146,7 @@
                     android:textColor="@color/default_text_color" />
 
                 <TextView
+                    style="@style/CustomSubtitle1"
                     android:id="@+id/distance_from_earth"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
