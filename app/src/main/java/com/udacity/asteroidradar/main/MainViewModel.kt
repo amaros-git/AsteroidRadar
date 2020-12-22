@@ -1,6 +1,8 @@
 package com.udacity.asteroidradar.main
 
 import android.app.Application
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.PictureOfDay
@@ -23,6 +25,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     )
 
     val asteroids: LiveData<List<Asteroid>> = asteroidRepository.asteroids
+
+    private val _todayAsteroids = MutableLiveData<List<Asteroid>>()
+    val todayAsteroids: LiveData<List<Asteroid>>
+        get() = _todayAsteroids
 
     private val _pictureOfDay = MutableLiveData<PictureOfDay>()
     val pictureOfDay: LiveData<PictureOfDay>
@@ -51,6 +57,22 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 _showToastEvent.value = "Network error, trying to display saved data"
             }
         }
+    }
+
+    fun getTodayAsteroids() {
+        viewModelScope.launch {
+            _todayAsteroids.value = asteroidRepository.getTodayAsteroid()
+        }
+    }
+
+    fun getAllAsteroids() {
+        viewModelScope.launch {
+            //asteroids.value = asteroidRepository.getAllAsteroids()
+        }
+    }
+
+    fun getWeekAsteroids() {
+
     }
 
     /**

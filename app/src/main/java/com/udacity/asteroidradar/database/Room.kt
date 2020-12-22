@@ -10,8 +10,11 @@ const val DATABASE_NAME = "videos"
 
 @Dao
 interface AsteroidRadarDao {
-    @Query("select * from asteroids")
+    @Query("select * from asteroids ORDER BY close_approach_date ASC")
     fun getAllAsteroids(): LiveData<List<Asteroid>>
+
+    @Query("select * from asteroids WHERE close_approach_date = :date")
+    fun getTodayAsteroid(date: String): List<Asteroid>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllAsteroids(vararg video: Asteroid)

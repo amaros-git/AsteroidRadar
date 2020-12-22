@@ -51,10 +51,22 @@ class AsteroidRadarRepository(
         }
     }
 
+   /* suspend fun getAllAsteroids(): List<Asteroid> {
+
+    }*/
+
     @Nullable
     suspend fun getPictureOfDay(): PictureOfDay {
         return withContext(Dispatchers.IO) {
             picture.retrofitService.getPictureOfDay(Constants.PRIVATE_KEY)
+        }
+    }
+
+    suspend fun getTodayAsteroid(): List<Asteroid> {
+        return withContext(Dispatchers.IO) {
+            database.asteroidDao.getTodayAsteroid(
+                getCurrentDateString(Constants.API_QUERY_DATE_FORMAT)
+            )
         }
     }
 

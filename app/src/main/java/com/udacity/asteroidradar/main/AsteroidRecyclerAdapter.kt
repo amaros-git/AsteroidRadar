@@ -45,7 +45,7 @@ class AsteroidRecyclerAdapter(private var clickListener: AsteroidClickListener) 
         }
     }
 
-    fun submitList(list: List<Asteroid>?, showHeader: Boolean) {
+    fun submitMyList(list: List<Asteroid>?, showHeader: Boolean) {
         list?.let {
             adapterScope.launch {
                 val items = if (showHeader) {

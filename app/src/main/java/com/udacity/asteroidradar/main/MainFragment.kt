@@ -39,7 +39,15 @@ class MainFragment : Fragment() {
         binding.asteroidRecycler.adapter = adapter
 
         viewModel.asteroids.observe(viewLifecycleOwner) {
-            adapter.submitList(it, false)
+            adapter.submitMyList(it, false)
+        }
+
+        viewModel.todayAsteroids.observe(viewLifecycleOwner) {
+            if (it.isEmpty()) {
+                Toast.makeText(context, "No today's asteroids", Toast.LENGTH_SHORT)
+                    .show()
+            }
+            adapter.submitMyList(it, false)
         }
 
         viewModel.showToastEvent.observe(viewLifecycleOwner) {
@@ -59,6 +67,34 @@ class MainFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.show_today_asteroids -> viewModel.getTodayAsteroids()
+            R.id.show_week_asteroids -> viewModel.getWeekAsteroids()
+            else -> viewModel.getAllAsteroids()
+        }
         return true
     }
+
+    /*fun getBitmap(context: Context, url: String?): Bitmap? {
+        val CACHE_PATH: String =
+            context.cacheDir.absolutePath.toString() + "/picasso-cache/"
+        val files: Array<File?> = File(CACHE_PATH).listFiles()
+        for (file in files) {
+            val fname: String = file!!.name
+            if (fname.contains(".") && fname.substring(fname.lastIndexOf(".")) == ".0") {
+                try {
+                    val br = BufferedReader(FileReader(file))
+                    if (br.readLine().equals(url)) {
+                        val image_path = CACHE_PATH + fname.replace(".0", ".1")
+                        if (File(image_path).exists()) {
+                            return BitmapFactory.decodeFile(image_path)
+                        }
+                    }
+                } catch (e: FileNotFoundException) {
+                } catch (e: IOException) {
+                }
+            }
+        }
+        return null
+    }*/
 }
