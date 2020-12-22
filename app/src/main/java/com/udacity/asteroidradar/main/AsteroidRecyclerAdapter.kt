@@ -52,9 +52,9 @@ class AsteroidRecyclerAdapter(private var clickListener: AsteroidClickListener) 
                 null -> listOf(ViewDataItem.Header)
                 else -> listOf(ViewDataItem.Header) + list.map { ViewDataItem.AsteroidItem(it) }
             }
-            items.forEach {
+           /* items.forEach {
                 Timber.i(it.toString())
-            }
+            }*/
             withContext(Dispatchers.Main) {
                 submitList(items)
             }

@@ -51,6 +51,6 @@ object AsteroidRadarApi {
 
 object PictureApi {
     val retrofitService : PictureApiService by lazy {
-        retrofit.create(PictureApiService::class.java)
+        pictureRetrofit.create(PictureApiService::class.java)
     }
 }

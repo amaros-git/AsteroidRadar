@@ -2,6 +2,7 @@ package com.udacity.asteroidradar
 
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 
 @BindingAdapter("statusIcon")
@@ -12,6 +13,20 @@ fun ImageView.setAsteroidIcon(item: Asteroid?) {
             else -> R.drawable.ic_status_normal
         })
     }
+}
+
+@BindingAdapter("imageUrl")
+fun ImageView.bindImage(imgUrl: String?) {
+    setImageResource( R.drawable.ic_status_potentially_hazardous)
+    /*imgUrl?.let {
+        val imgURI = it.toUri().buildUpon().scheme("https").build()
+        Glide.with(imgView.context)
+            .load(imgURI)
+            .apply(RequestOptions()
+                .placeholder(R.drawable.loading_animation)
+                .error(R.drawable.ic_broken_image))
+            .into(imgView)
+    }*/
 }
 
 @BindingAdapter("asteroidStatusImage")

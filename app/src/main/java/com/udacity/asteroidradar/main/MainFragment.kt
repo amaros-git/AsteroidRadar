@@ -39,6 +39,11 @@ class MainFragment : Fragment() {
             adapter.addHeaderAndSubmitList(it)
         }
 
+        //TODO for test only
+        viewModel.pictureOfDay.observe(viewLifecycleOwner) {
+            Timber.i("Picture of the day: $it")
+        }
+
         setHasOptionsMenu(true)
 
         return binding.root

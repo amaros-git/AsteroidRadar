@@ -3,6 +3,7 @@ package com.udacity.asteroidradar.main
 import android.app.Application
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
+import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.database.getDatabase
 import com.udacity.asteroidradar.network.AsteroidRadarApi
 import com.udacity.asteroidradar.network.PictureApi
@@ -18,14 +19,18 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         PictureApi
     )
 
+    val asteroids: LiveData<List<Asteroid>> = asteroidRepository.asteroids
+
+    private val _pictureOfDay = MutableLiveData<PictureOfDay>()
+    val pictureOfDay: LiveData<PictureOfDay>
+        get() = _pictureOfDay
+
     init {
         viewModelScope.launch {
             asteroidRepository.refreshAsteroidsCache()
+            _pictureOfDay.value = asteroidRepository.getPictureOfDay()
         }
     }
-
-    val asteroids: LiveData<List<Asteroid>> = asteroidRepository.asteroids
-
 
     /**
      * Factory for constructing DevByteViewModel with parameter

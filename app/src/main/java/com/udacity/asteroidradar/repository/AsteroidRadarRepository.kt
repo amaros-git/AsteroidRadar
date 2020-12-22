@@ -1,8 +1,10 @@
 package com.udacity.asteroidradar.repository
 
+import androidx.annotation.Nullable
 import androidx.lifecycle.LiveData
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
+import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.database.AsteroidRadarDatabase
 import com.udacity.asteroidradar.network.AsteroidRadarApi
 import com.udacity.asteroidradar.network.PictureApi
@@ -50,6 +52,18 @@ class AsteroidRadarRepository(
             updateDatabase(asteroids)
 
             asteroids
+        }
+    }
+
+    @Nullable
+    suspend fun getPictureOfDay(): PictureOfDay? {
+        return withContext(Dispatchers.IO) {
+            try {
+                picture.retrofitService.getPictureOfDay(Constants.PRIVATE_KEY)
+            } catch (e: HttpException) {
+                Timber.e("Network error: ${e.message}")
+                null
+            }
         }
     }
 
