@@ -44,7 +44,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/CustomHeadline5"
+                        style="@style/CustomHeadline6"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/close_approach_data_title"
