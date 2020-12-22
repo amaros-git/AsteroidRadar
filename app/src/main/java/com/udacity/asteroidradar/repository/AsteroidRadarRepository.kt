@@ -1,16 +1,15 @@
 package com.udacity.asteroidradar.repository
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.viewModelScope
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.database.AsteroidRadarDatabase
 import com.udacity.asteroidradar.network.AsteroidRadarApi
+import com.udacity.asteroidradar.network.PictureApi
 import com.udacity.asteroidradar.utils.getCurrentDateString
 import com.udacity.asteroidradar.utils.getFutureDateString
 import com.udacity.asteroidradar.utils.parseAsteroidsJsonResult
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONException
 import org.json.JSONObject
@@ -19,7 +18,8 @@ import timber.log.Timber
 
 class AsteroidRadarRepository(
     private val database: AsteroidRadarDatabase,
-    private val network: AsteroidRadarApi
+    private val radar: AsteroidRadarApi,
+    private val picture: PictureApi
     ) {
 
     val asteroids: LiveData<List<Asteroid>>
@@ -35,7 +35,7 @@ class AsteroidRadarRepository(
 
         return withContext(Dispatchers.IO) {
             val responseString = try {
-                network.retrofitService.getAsteroids(
+                radar.retrofitService.getAsteroids(
                     startDate,
                     endDate,
                     Constants.PRIVATE_KEY

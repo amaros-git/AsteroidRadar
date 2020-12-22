@@ -5,6 +5,7 @@ import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.database.getDatabase
 import com.udacity.asteroidradar.network.AsteroidRadarApi
+import com.udacity.asteroidradar.network.PictureApi
 import com.udacity.asteroidradar.repository.AsteroidRadarRepository
 import kotlinx.coroutines.launch
 
@@ -13,7 +14,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val asteroidRepository = AsteroidRadarRepository(
         getDatabase(application),
-        AsteroidRadarApi
+        AsteroidRadarApi,
+        PictureApi
     )
 
     init {

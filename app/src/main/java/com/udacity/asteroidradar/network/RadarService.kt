@@ -1,22 +1,28 @@
 package com.udacity.asteroidradar.network
 
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import com.udacity.asteroidradar.Asteroid
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.udacity.asteroidradar.Constants
+import com.udacity.asteroidradar.PictureOfDay
 import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 
 
-/*private val moshi = Moshi.Builder()
+private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
-    .build()*/
+    .build()
 
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(ScalarsConverterFactory.create())
+    .baseUrl(Constants.BASE_URL)
+    .build()
+
+private val pictureRetrofit = Retrofit.Builder()
+    .addConverterFactory(MoshiConverterFactory.create(moshi))
     .baseUrl(Constants.BASE_URL)
     .build()
 
@@ -32,8 +38,19 @@ interface AsteroidRadarApiService {
     ): String
 }
 
+interface PictureApiService {
+    @GET("planetary/apod")
+    suspend fun getPictureOfDay(@Query("api_key") apiKey: String): PictureOfDay
+}
+
 object AsteroidRadarApi {
     val retrofitService : AsteroidRadarApiService by lazy {
         retrofit.create(AsteroidRadarApiService::class.java)
+    }
+}
+
+object PictureApi {
+    val retrofitService : PictureApiService by lazy {
+        retrofit.create(PictureApiService::class.java)
     }
 }
