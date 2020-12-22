@@ -36,7 +36,8 @@
             tools:srcCompat="@drawable/ic_status_potentially_hazardous" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/asteroid_name_text"
+            style="@style/CustomHeadline6"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -47,7 +48,8 @@
             app:layout_constraintTop_toTopOf="@+id/quality_image" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/asteroid_date_text"
+            style="@style/CustomSubtitle1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"

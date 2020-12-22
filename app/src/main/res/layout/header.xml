@@ -6,11 +6,12 @@
     </data>
 
     <TextView
+        style="@style/CustomHeadline5"
         android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Header"
+        android:text="Asteroids"
         android:textAlignment="center"
         android:padding="16dp" />
 </layout>
