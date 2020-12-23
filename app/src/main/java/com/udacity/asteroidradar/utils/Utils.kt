@@ -68,9 +68,11 @@ fun getCurrentDateString(format: String): String {
 }
 
 /**
- * returns future date in string and format, which is current date + days
+ * returns string date in format:-
+ * if days is positive then future date == current date + days
+ * if days is negative them past date == current date - days
  */
-fun getFutureDateString(format: String, days: Int): String {
+fun getDateString(format: String, days: Int): String {
     val calendar = Calendar.getInstance()
     calendar.add(Calendar.DAY_OF_YEAR, days)
     val currentTime = calendar.time

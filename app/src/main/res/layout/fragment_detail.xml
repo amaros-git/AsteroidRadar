@@ -23,7 +23,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@drawable/asteroid_safe" />
+            tools:srcCompat="@drawable/asteroid_safe"
+            app:asteroidStatusImageContent="@{asteroid.potentiallyHazardous}" />
 
         <ScrollView
             android:layout_width="0dp"
@@ -94,6 +95,7 @@
 
                     <ImageView
                         android:id="@+id/help_button"
+                        android:contentDescription="@string/help_button_description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="16dp"

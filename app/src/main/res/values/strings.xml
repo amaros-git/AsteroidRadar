@@ -21,4 +21,11 @@
     <string name="this_is_nasa_s_picture_of_day_showing_nothing_yet">This is NASA\'s picture of day, showing nothing yet</string>
     <string name="nasa_picture_of_day_content_description_format">NASA\'s picture of day: %s</string>
     <string name="OK_button_text">OK</string>
+    <string name="help_button_description">Explains meaning of astronomy unit</string>
+
+    <string name="hazard_asteroid_description">Picture: this asteroid is potentially hazard</string>
+    <string name="safe_asteroid_description">Picture: this asteroid is not hazard at all</string>
+
+    <string name="picture_day_default_description">No any picture of the day today</string>
+    <string name="picture_of_the_day">Picture of the day</string>
 </resources>

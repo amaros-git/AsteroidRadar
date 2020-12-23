@@ -2,6 +2,7 @@ package com.udacity.asteroidradar.main
 
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Picture
 import androidx.core.content.edit
 import androidx.lifecycle.*
@@ -12,6 +13,7 @@ import com.udacity.asteroidradar.network.AsteroidRadarApi
 import com.udacity.asteroidradar.network.PictureApi
 import com.udacity.asteroidradar.repository.AsteroidRadarRepository
 import kotlinx.coroutines.launch
+import org.json.JSONException
 import retrofit2.HttpException
 import timber.log.Timber
 import java.net.SocketTimeoutException
@@ -27,7 +29,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private enum class LiveDataType { TODAY, WEEK, ALL, NONE }
     private var currentLiveDataType = LiveDataType.NONE
 
-    val sharedPref = application.getSharedPreferences("Picture", Context.MODE_PRIVATE)
+    private val sharedPref: SharedPreferences =
+        application.getSharedPreferences("Picture", Context.MODE_PRIVATE)
 
     private val asteroidRepository = AsteroidRadarRepository(
         getDatabase(application),
@@ -82,6 +85,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                         }
                         is SocketTimeoutException -> {
                             Timber.e("Socket timeout: ${e.message}")
+                        }
+                        is JSONException -> {
+                            Timber.i("Response parsinf error")
                         }
                         else -> Timber.e("Unexpected exception: ${e.message}")
                     }

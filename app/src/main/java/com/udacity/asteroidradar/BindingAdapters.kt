@@ -7,7 +7,6 @@ import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 import com.squareup.picasso.Picasso
-import com.squareup.picasso.RequestCreator
 import com.udacity.asteroidradar.main.NetworkRequestStatus
 
 @BindingAdapter("statusIcon")
@@ -21,17 +20,29 @@ fun ImageView.setAsteroidIcon(item: Asteroid?) {
 }
 
 @BindingAdapter("imageUrl")
-fun bindImage(imgView: ImageView, picture: PictureOfDay?) {
+fun bindImage(imageView: ImageView, picture: PictureOfDay?) {
     if (picture?.mediaType == "image") {
         val imgURI = picture.url.toUri().buildUpon().scheme("https").build()
-        Picasso.with(imgView.context)
+        Picasso.with(imageView.context)
             .load(imgURI)
             .placeholder(R.drawable.loading_animation)
             .error(R.drawable.ic_broken_image)
-            .into(imgView)
+            .into(imageView)
 
-    } else {
-        //TODO else what ?
+        imageView.contentDescription = picture.title
+    }
+    //TODO else show some default image or get previous one from cache
+}
+
+@BindingAdapter("pictureOfDayDescription")
+fun bindPictureDescription(imageView: ImageView, picture: PictureOfDay?) {
+    if (null != picture) {
+        imageView.contentDescription =
+            imageView.context.getString(R.string.picture_of_the_day) + ": " + picture.title
+    }
+    else {
+        imageView.contentDescription =
+            imageView.context.getString(R.string.picture_day_default_description)
     }
 }
 
@@ -41,6 +52,17 @@ fun bindDetailsStatusImage(imageView: ImageView, isHazardous: Boolean) {
         imageView.setImageResource(R.drawable.asteroid_hazardous)
     } else {
         imageView.setImageResource(R.drawable.asteroid_safe)
+    }
+}
+
+@BindingAdapter("asteroidStatusImageContent")
+fun bindDetailsStatusImageContent(imageView: ImageView, isHazardous: Boolean) {
+    if (isHazardous) {
+        imageView.contentDescription =
+            imageView.context.getString(R.string.hazard_asteroid_description)
+    } else {
+        imageView.contentDescription =
+            imageView.context.getString(R.string.safe_asteroid_description)
     }
 }
 

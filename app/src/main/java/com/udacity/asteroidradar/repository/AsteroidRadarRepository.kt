@@ -1,7 +1,5 @@
 package com.udacity.asteroidradar.repository
 
-import androidx.annotation.Nullable
-import androidx.lifecycle.LiveData
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.PictureOfDay
@@ -9,18 +7,14 @@ import com.udacity.asteroidradar.database.AsteroidRadarDatabase
 import com.udacity.asteroidradar.network.AsteroidRadarApi
 import com.udacity.asteroidradar.network.PictureApi
 import com.udacity.asteroidradar.utils.getCurrentDateString
-import com.udacity.asteroidradar.utils.getFutureDateString
+import com.udacity.asteroidradar.utils.getDateString
 import com.udacity.asteroidradar.utils.parseAsteroidsJsonResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.json.JSONException
 import org.json.JSONObject
-import retrofit2.HttpException
 import timber.log.Timber
-import java.net.SocketTimeoutException
 
-//TODO all EXCEPTIONS MUST be moved into ViewModel to report to Fragment about error
-//and show some sort of toast
+
 class AsteroidRadarRepository(
     private val database: AsteroidRadarDatabase,
     private val radar: AsteroidRadarApi,
@@ -28,9 +22,14 @@ class AsteroidRadarRepository(
     ) {
 
 
+    /**
+     * @throws JSONException
+     * @throws HttpException
+     * @throws SocketTimeoutException
+     */
     suspend fun refreshAsteroidCache(): List<Asteroid> {
         val startDate = getCurrentDateString(Constants.API_QUERY_DATE_FORMAT)
-        val endDate = getFutureDateString(
+        val endDate = getDateString(
             Constants.API_QUERY_DATE_FORMAT,
             Constants.DEFAULT_END_DATE_DAYS
         )
@@ -40,7 +39,7 @@ class AsteroidRadarRepository(
                 startDate, endDate, Constants.PRIVATE_KEY
             )
 
-            val asteroids = parseAsteroids(response)
+            val asteroids = parseAsteroidsJsonResult(JSONObject(response))
 
             updateDatabase(asteroids)
 
@@ -60,7 +59,7 @@ class AsteroidRadarRepository(
         return withContext(Dispatchers.IO) {
             database.asteroidDao.getWeekAsteroid(
                 getCurrentDateString(Constants.API_QUERY_DATE_FORMAT),
-                getFutureDateString(
+                getDateString(
                     Constants.API_QUERY_DATE_FORMAT,
                     Constants.DEFAULT_END_DATE_DAYS
                 )
@@ -81,20 +80,16 @@ class AsteroidRadarRepository(
         }
     }
 
-
-    private fun parseAsteroids(response: String): List<Asteroid> {
-        return try {
-                parseAsteroidsJsonResult(JSONObject(response))
-            } catch (e: JSONException) {
-                Timber.e("Parsing error: ${e.message}")
-                emptyList()
-            }
-    }
-
+    /**
+     * deletes all from the previous day and then inserts new asteroids
+     */
     private fun updateDatabase(asteroids: List<Asteroid>) {
+        database.asteroidDao.deleteByDate(getDateString(Constants.API_QUERY_DATE_FORMAT, -1))
+
         if(asteroids.isNotEmpty()) {
             val asteroidsArray = asteroids.toTypedArray()
             database.asteroidDao.insertAllAsteroids(*asteroidsArray)
         }
+
     }
 }
