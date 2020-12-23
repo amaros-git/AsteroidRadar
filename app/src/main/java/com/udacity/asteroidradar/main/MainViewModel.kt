@@ -69,7 +69,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         //on the start default is week asteroids. But on the very first
         //application start database is empty.
         viewModelScope.launch {
-            val asteroids = asteroidRepository.getWeekAsteroids()
+            val asteroids = asteroidRepository.getTodayAsteroid()
             if (asteroids.isEmpty()) {
                 _networkRequestStatus.value = NetworkRequestStatus.LOADING
                 try {
@@ -92,7 +92,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             } else {
                 _weekAsteroids.value = asteroids
             }
-            currentLiveDataType = LiveDataType.WEEK
+            currentLiveDataType = LiveDataType.TODAY
         }
 
         getPictureOfDay()
@@ -122,12 +122,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 }
                 //try to restore from the cache. Even if nullable, I provide
                 //default value so it is save to use not-null assertion operator !!
-                val mediaType = sharedPref.getString("mediaType", "none")!!
-                val url = sharedPref.getString("url", "none")!!
-                val title = sharedPref.getString("title", "none")!!
+                val cachedPicture = PictureOfDay(
+                    sharedPref.getString("mediaType", "none")!!,
+                    sharedPref.getString("title", "none")!!,
+                    sharedPref.getString("url", "none")!!
+                )
 
-                val cachedPicture = PictureOfDay(mediaType, title, url)
-                Timber.i("cachedPicture = $cachedPicture")
                 _pictureOfDay.value = cachedPicture
             }
         }
