@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Радар астероидов</string>
     <string name="detail_fragment_title">Подробности</string>
-
     <string name="next_week_asteroids">Астероиды недели</string>
     <string name="today_asteroids">Астероиды сегодня</string>
     <string name="saved_asteroids">Сохраненные астероиды</string>
@@ -13,16 +12,13 @@
     <string name="astronomical_unit_format">%f а.е.</string>
     <string name="km_unit_format">%f км</string>
     <string name="km_s_unit_format">%f км/с</string>
-
     <string name="astronomica_unit_explanation">Астрономическая единица (а.е.) - это единица длины, примерно расстояние от Земли до Солнца и равная примерно 150 миллионам километров (93 миллионам миль).</string>
     <string name="astronomical_unit_explanation_button">Определение астрономической единицы</string>
-
     <string name="potentially_hazardous_asteroid_image">Изображение потенциально опасного астероида</string>
     <string name="not_hazardous_asteroid_image">Изображение неопасного астероида</string>
     <string name="this_is_nasa_s_picture_of_day_showing_nothing_yet">Это дневная фотография НАСА, на которой пока ничего не показано.</string>
     <string name="nasa_picture_of_day_content_description_format">Фотография дня НАСА: %s</string>
-
     <string name="OK_button_text">OK</string>
     <string name="help_button_description">Объясняет значение астрономической единицы.</string>
-
+    <string name="refresh_from_network_item">Обновить данные из сети</string>
 </resources>

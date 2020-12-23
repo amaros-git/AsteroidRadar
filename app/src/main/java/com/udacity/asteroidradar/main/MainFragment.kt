@@ -13,10 +13,16 @@ import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 import com.udacity.asteroidradar.utils.getDateString
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 
 class MainFragment : Fragment() {
+
+    private val mainFragmentScope = CoroutineScope(Dispatchers.Main)
 
     private val viewModel: MainViewModel by lazy {
         val activity = requireNotNull(this.activity) {
@@ -100,6 +106,11 @@ class MainFragment : Fragment() {
         when (item.itemId) {
             R.id.show_today_asteroids -> viewModel.getTodayAsteroids()
             R.id.show_week_asteroids -> viewModel.getWeekAsteroids()
+            R.id.refresh_from_nasa -> {
+                mainFragmentScope.launch {
+                    viewModel.refreshCache()
+                }
+            }
             else -> viewModel.getAllAsteroids()
         }
         return true
@@ -109,5 +120,10 @@ class MainFragment : Fragment() {
         for (i in list.indices) {
             adapter.notifyItemRemoved(i)
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mainFragmentScope.cancel()
     }
 }

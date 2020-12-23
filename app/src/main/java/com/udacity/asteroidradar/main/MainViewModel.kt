@@ -72,36 +72,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         //on the start default is week asteroids. But on the very first
         //application start database is empty.
         viewModelScope.launch {
-            val asteroids = asteroidRepository.getTodayAsteroid()
+            var asteroids = asteroidRepository.getTodayAsteroid()
             if (asteroids.isEmpty()) {
-                _networkRequestStatus.value = NetworkRequestStatus.LOADING
-                try {
-                    _weekAsteroids.value = asteroidRepository.refreshAsteroidCache()
-                    _networkRequestStatus.value = NetworkRequestStatus.DONE
-                } catch (e: Exception) {
-                    when (e.cause) {
-                        is HttpException -> {
-                            Timber.e("Network error: ${e.message}")
-                        }
-                        is SocketTimeoutException -> {
-                            Timber.e("Socket timeout: ${e.message}")
-                        }
-                        is JSONException -> {
-                            Timber.i("Response parsinf error")
-                        }
-                        else -> Timber.e("Unexpected exception: ${e.message}")
-                    }
-                    _networkRequestStatus.value = NetworkRequestStatus.DONE
-                    _showToastEvent.value = "Cannot connect NASA and local cache is empty. " +
-                            "Please check connection or try later"
-                }
-            } else {
-                _weekAsteroids.value = asteroids
+                asteroids = refreshCache()
             }
+            _todayAsteroids.value = asteroids
             currentLiveDataType = LiveDataType.TODAY
-        }
 
-        getPictureOfDay()
+            getPictureOfDay()
+        }
     }
 
     private fun getPictureOfDay() {
@@ -158,6 +137,35 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             _allAsteroids.value = asteroidRepository.getAllAsteroids()
             currentLiveDataType = LiveDataType.ALL
+        }
+    }
+
+    suspend fun refreshCache(): List<Asteroid>  {
+        getPictureOfDay()
+
+        _networkRequestStatus.value = NetworkRequestStatus.LOADING
+        return try {
+            val asteroids = asteroidRepository.refreshAsteroidCache()
+            _networkRequestStatus.value = NetworkRequestStatus.DONE
+            asteroids
+        } catch (e: Exception) {
+            when (e.cause) {
+                is HttpException -> {
+                    Timber.e("Network error: ${e.message}")
+                }
+                is SocketTimeoutException -> {
+                    Timber.e("Socket timeout: ${e.message}")
+                }
+                is JSONException -> {
+                    Timber.i("Response parsinf error")
+                }
+                else -> Timber.e("Unexpected exception: ${e.message}")
+            }
+            _networkRequestStatus.value = NetworkRequestStatus.DONE
+            _showToastEvent.value = "Cannot connect NASA. " +
+                    "Please check connection or try later"
+
+            emptyList()
         }
     }
 
