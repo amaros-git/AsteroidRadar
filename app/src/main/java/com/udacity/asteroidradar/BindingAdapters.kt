@@ -38,11 +38,12 @@ fun bindImage(imageView: ImageView, picture: PictureOfDay?) {
 fun bindPictureDescription(imageView: ImageView, picture: PictureOfDay?) {
     if (null != picture) {
         imageView.contentDescription =
-            imageView.context.getString(R.string.picture_of_the_day) + ": " + picture.title
+            imageView.context.getString(
+                R.string.nasa_picture_of_day_content_description_format, picture.title)
     }
     else {
         imageView.contentDescription =
-            imageView.context.getString(R.string.picture_day_default_description)
+            imageView.context.getString(R.string.this_is_nasa_s_picture_of_day_showing_nothing_yet)
     }
 }
 
@@ -59,10 +60,10 @@ fun bindDetailsStatusImage(imageView: ImageView, isHazardous: Boolean) {
 fun bindDetailsStatusImageContent(imageView: ImageView, isHazardous: Boolean) {
     if (isHazardous) {
         imageView.contentDescription =
-            imageView.context.getString(R.string.hazard_asteroid_description)
+            imageView.context.getString(R.string.potentially_hazardous_asteroid_image)
     } else {
         imageView.contentDescription =
-            imageView.context.getString(R.string.safe_asteroid_description)
+            imageView.context.getString(R.string.not_hazardous_asteroid_image)
     }
 }
 
