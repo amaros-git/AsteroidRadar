@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="day_image_height">220dp</dimen>
+    <dimen name="margin_small">4dp</dimen>
+    <dimen name="margin_big">16dp</dimen>
+    <dimen name="padding_big">16dp</dimen>
+    <dimen name="padding_medium">8dp</dimen>
+    <dimen name="asteroid_icon_width">30dp</dimen>
+    <dimen name="asteroid_icon_height">30dp</dimen>
+    <dimen name="margin_medium">8dp</dimen>
 </resources>

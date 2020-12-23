@@ -2,19 +2,22 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/show_week_asteroids"
-        android:title="@string/next_week_asteroids" />
+
     <item
         android:id="@+id/show_today_asteroids"
         android:title="@string/today_asteroids" />
+
+    <item
+        android:id="@+id/show_week_asteroids"
+        android:title="@string/next_week_asteroids" />
+
     <item
         android:id="@+id/show_saved_asteroids"
         android:title="@string/saved_asteroids" />
 
     <item
         android:id="@+id/refresh_from_nasa"
-        android:icon="@drawable/baseline_autorenew_white_18dp"
+        android:icon="@drawable/autorenew_white_18dp"
         android:title="@string/refresh_from_network_item"
         app:showAsAction="ifRoom" />
 </menu>

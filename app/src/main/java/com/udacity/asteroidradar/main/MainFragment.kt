@@ -122,7 +122,7 @@ class MainFragment : Fragment() {
             adapter.notifyItemRemoved(i)
         }
     }
-    
+
     override fun onDestroy() {
         super.onDestroy()
         mainFragmentScope.cancel()

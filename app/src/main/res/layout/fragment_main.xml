@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:background="#552c2c2c"
-                android:padding="8dp"
+                android:padding="@dimen/padding_medium"
                 android:text="@{viewModel.pictureOfDay.title}"
                 android:textColor="@color/default_text_color" />
         </FrameLayout>
