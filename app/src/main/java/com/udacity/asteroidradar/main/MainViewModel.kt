@@ -69,12 +69,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     //
 
     init {
-        //on the start default is week asteroids. But on the very first
+        //on the start default is today's asteroids. But on the very first
         //application start database is empty.
         viewModelScope.launch {
-            var asteroids = asteroidRepository.getTodayAsteroid()
+            val asteroids = asteroidRepository.getTodayAsteroid()
             if (asteroids.isEmpty()) {
-                asteroids = refreshCache()
+                _showToastEvent.value = "Cannot find today asteroids. Please try to refresh."
             }
             _todayAsteroids.value = asteroids
             currentLiveDataType = LiveDataType.TODAY
@@ -140,14 +140,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    suspend fun refreshCache(): List<Asteroid>  {
+    suspend fun refreshCache()  {
         getPictureOfDay()
 
         _networkRequestStatus.value = NetworkRequestStatus.LOADING
-        return try {
-            val asteroids = asteroidRepository.refreshAsteroidCache()
-            _networkRequestStatus.value = NetworkRequestStatus.DONE
-            asteroids
+        try {
+            asteroidRepository.refreshAsteroidCache()
         } catch (e: Exception) {
             when (e.cause) {
                 is HttpException -> {
@@ -157,16 +155,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     Timber.e("Socket timeout: ${e.message}")
                 }
                 is JSONException -> {
-                    Timber.i("Response parsinf error")
+                    Timber.i("Response parsing error")
                 }
                 else -> Timber.e("Unexpected exception: ${e.message}")
             }
-            _networkRequestStatus.value = NetworkRequestStatus.DONE
             _showToastEvent.value = "Cannot connect NASA. " +
                     "Please check connection or try later"
-
-            emptyList()
         }
+        _networkRequestStatus.value = NetworkRequestStatus.DONE
+
+        _todayAsteroids.value = asteroidRepository.getTodayAsteroid()
+        currentLiveDataType = LiveDataType.TODAY
     }
 
     fun showToastEventCompleted() {

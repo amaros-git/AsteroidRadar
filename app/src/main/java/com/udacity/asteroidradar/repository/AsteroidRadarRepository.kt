@@ -28,6 +28,7 @@ class AsteroidRadarRepository(
      * @throws SocketTimeoutException
      */
     suspend fun refreshAsteroidCache(): List<Asteroid> {
+        Timber.i("refreshAsteroidCache called")
         val startDate = getCurrentDateString(Constants.API_QUERY_DATE_FORMAT)
         val endDate = getDateString(
             Constants.API_QUERY_DATE_FORMAT,

@@ -107,6 +107,7 @@ class MainFragment : Fragment() {
             R.id.show_today_asteroids -> viewModel.getTodayAsteroids()
             R.id.show_week_asteroids -> viewModel.getWeekAsteroids()
             R.id.refresh_from_nasa -> {
+                Timber.i("Refresh clicked")
                 mainFragmentScope.launch {
                     viewModel.refreshCache()
                 }
@@ -121,9 +122,9 @@ class MainFragment : Fragment() {
             adapter.notifyItemRemoved(i)
         }
     }
-
-    override fun onStop() {
-        super.onStop()
+    
+    override fun onDestroy() {
+        super.onDestroy()
         mainFragmentScope.cancel()
     }
 }
