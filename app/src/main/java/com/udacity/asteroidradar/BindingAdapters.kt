@@ -1,11 +1,14 @@
 package com.udacity.asteroidradar
 
+import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.RequestCreator
+import com.udacity.asteroidradar.main.NetworkRequestStatus
 
 @BindingAdapter("statusIcon")
 fun ImageView.setAsteroidIcon(item: Asteroid?) {
@@ -57,4 +60,17 @@ fun bindTextViewToKmUnit(textView: TextView, number: Double) {
 fun bindTextViewToDisplayVelocity(textView: TextView, number: Double) {
     val context = textView.context
     textView.text = String.format(context.getString(R.string.km_s_unit_format), number)
+}
+
+@BindingAdapter("networkStatus")
+fun bindStatus(progressBar: ProgressBar, status: NetworkRequestStatus?) {
+    when (status) {
+        NetworkRequestStatus.LOADING -> {
+            progressBar.visibility = View.VISIBLE
+        }
+        NetworkRequestStatus.DONE -> {
+            progressBar.visibility = View.GONE
+        }
+        else -> {/*error out of scope */}
+    }
 }

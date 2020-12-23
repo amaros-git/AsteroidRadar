@@ -8,8 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
+import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
+import timber.log.Timber
+
 
 class MainFragment : Fragment() {
 
@@ -21,8 +24,12 @@ class MainFragment : Fragment() {
             .get(MainViewModel::class.java)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    private lateinit var adapter: AsteroidRecyclerAdapter
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
         (activity as AppCompatActivity).supportActionBar?.title =
             getString(R.string.app_name)
@@ -33,29 +40,50 @@ class MainFragment : Fragment() {
 
         binding.viewModel = viewModel
 
-        val adapter = AsteroidRecyclerAdapter(AsteroidClickListener {
-            this.findNavController().navigate(MainFragmentDirections.actionShowDetail(it))
+        adapter = AsteroidRecyclerAdapter(AsteroidClickListener {
+            viewModel.displayAsteroidDetails(it)
         })
         binding.asteroidRecycler.adapter = adapter
 
+        viewModel.refreshRecycler()
+
         viewModel.todayAsteroids.observe(viewLifecycleOwner) {
-            if (it.isEmpty()) {
-                Toast.makeText(context, "No today's asteroids", Toast.LENGTH_SHORT)
-                    .show()
+            it?.let {
+                Timber.i("Today")
+                refreshAdapter(it)
+                adapter.submitMyList(it, false)
+                viewModel.clearTodayAsteroidsData()
             }
-            adapter.submitMyList(it, false)
+
         }
         viewModel.weekAsteroids.observe(viewLifecycleOwner) {
-            adapter.submitMyList(it, false)
+            it?.let{
+                Timber.i("Week")
+                refreshAdapter(it)
+                adapter.submitMyList(it, false)
+                viewModel.clearWeekAsteroidsData()
+            }
         }
         viewModel.allAsteroids.observe(viewLifecycleOwner) {
-            adapter.submitMyList(it, false)
+            it?.let {
+                Timber.i("All")
+                refreshAdapter(it)
+                adapter.submitMyList(it, false)
+                viewModel.clearAllAsteroidsData()
+            }
+        }
+
+        viewModel.navigateToDetailsEvent.observe(viewLifecycleOwner) {
+            it?.let {
+                this.findNavController().navigate(MainFragmentDirections.actionShowDetail(it))
+                viewModel.displayAsteroidDetailsCompleted()
+            }
         }
 
         viewModel.showToastEvent.observe(viewLifecycleOwner) {
             it?.let {
                 Toast.makeText(context, it, Toast.LENGTH_LONG).show()
-                viewModel.showEventProcessed()
+                viewModel.showToastEventCompleted()
             }
         }
 
@@ -76,6 +104,12 @@ class MainFragment : Fragment() {
             else -> viewModel.getAllAsteroids()
         }
         return true
+    }
+
+    private fun refreshAdapter(list: List<Asteroid>) {
+        for (i in list.indices) {
+            adapter.notifyItemRemoved(i)
+        }
     }
 
     /*fun getBitmap(context: Context, url: String?): Bitmap? {

@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 private const val ITEM_VIEW_TYPE_HEADER = 0
 private const val ITEM_VIEW_TYPE_ITEM = 1
@@ -49,13 +50,8 @@ class AsteroidRecyclerAdapter(private var clickListener: AsteroidClickListener) 
         list?.let {
             adapterScope.launch {
                 val items = if (showHeader) {
-                    when (list) {
-                        null -> listOf(ViewDataItem.Header)
-                        else -> listOf(ViewDataItem.Header) + list.map {
-                            ViewDataItem.AsteroidItem(
-                                it
-                            )
-                        }
+                    listOf(ViewDataItem.Header) + list.map {
+                        ViewDataItem.AsteroidItem(it)
                     }
                 } else {
                     list.map { ViewDataItem.AsteroidItem(it) }
