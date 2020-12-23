@@ -1,8 +1,6 @@
 package com.udacity.asteroidradar.main
 
 import android.app.Application
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.PictureOfDay
@@ -24,11 +22,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         PictureApi
     )
 
-    val asteroids: LiveData<List<Asteroid>> = asteroidRepository.asteroids
-
     private val _todayAsteroids = MutableLiveData<List<Asteroid>>()
     val todayAsteroids: LiveData<List<Asteroid>>
         get() = _todayAsteroids
+
+    private val _weekAsteroids = MutableLiveData<List<Asteroid>>()
+    val weekAsteroids: LiveData<List<Asteroid>>
+        get() = _weekAsteroids
+
+    private val _allAsteroids = MutableLiveData<List<Asteroid>>()
+    val allAsteroids: LiveData<List<Asteroid>>
+        get() = _allAsteroids
 
     private val _pictureOfDay = MutableLiveData<PictureOfDay>()
     val pictureOfDay: LiveData<PictureOfDay>
@@ -43,7 +47,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             try {
                 _pictureOfDay.value = asteroidRepository.getPictureOfDay()
-                asteroidRepository.refreshAsteroidsCache()
             } catch (e: Exception) {
                 when (e.cause) {
                     is HttpException -> {
@@ -54,8 +57,27 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     }
                     else -> Timber.e("Unexpected exception: ${e.message}")
                 }
-                _showToastEvent.value = "Network error, trying to display saved data"
+                //TODO rework to get last saved in case of error
             }
+        }
+    }
+
+    private suspend fun refreshAsteroidCache(): List<Asteroid> {
+        return try {
+            asteroidRepository.refreshAsteroidCache()
+        } catch (e: Exception) {
+            when (e.cause) {
+                is HttpException -> {
+                    Timber.e("Network error: ${e.message}")
+                }
+                is SocketTimeoutException -> {
+                    Timber.e("Socket timeout: ${e.message}")
+                }
+                else -> Timber.e("Unexpected exception: ${e.message}")
+            }
+            _showToastEvent.value = "Cannot connect NASA. Please try later"
+
+            emptyList()
         }
     }
 
@@ -67,12 +89,24 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getAllAsteroids() {
         viewModelScope.launch {
-            //asteroids.value = asteroidRepository.getAllAsteroids()
+            _allAsteroids.value = asteroidRepository.getAllAsteroids()
         }
     }
 
     fun getWeekAsteroids() {
+        viewModelScope.launch {
+            var asteroids = asteroidRepository.getWeekAsteroids()
+            if (asteroids.isEmpty()) {
+                _showToastEvent.value = "No week asteroids found, trying to get from NASA"
+                asteroids = refreshAsteroidCache()
+            }
+            _allAsteroids.value = asteroids
 
+        }
+    }
+
+    fun showEventProcessed() {
+        _showToastEvent.value = null
     }
 
     /**

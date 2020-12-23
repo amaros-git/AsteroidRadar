@@ -27,13 +27,8 @@ class AsteroidRadarRepository(
     private val picture: PictureApi
     ) {
 
-    val asteroids: LiveData<List<Asteroid>>
-        get() = database.asteroidDao.getAllAsteroids()
 
-    /**
-     * for caching
-     */
-    suspend fun refreshAsteroidsCache() {
+    suspend fun refreshAsteroidCache(): List<Asteroid> {
         val startDate = getCurrentDateString(Constants.API_QUERY_DATE_FORMAT)
         val endDate = getFutureDateString(
             Constants.API_QUERY_DATE_FORMAT,
@@ -48,17 +43,8 @@ class AsteroidRadarRepository(
             val asteroids = parseAsteroids(response)
 
             updateDatabase(asteroids)
-        }
-    }
 
-   /* suspend fun getAllAsteroids(): List<Asteroid> {
-
-    }*/
-
-    @Nullable
-    suspend fun getPictureOfDay(): PictureOfDay {
-        return withContext(Dispatchers.IO) {
-            picture.retrofitService.getPictureOfDay(Constants.PRIVATE_KEY)
+            asteroids
         }
     }
 
@@ -69,6 +55,32 @@ class AsteroidRadarRepository(
             )
         }
     }
+
+    suspend fun getWeekAsteroids(): List<Asteroid> {
+        return withContext(Dispatchers.IO) {
+            database.asteroidDao.getWeekAsteroid(
+                getCurrentDateString(Constants.API_QUERY_DATE_FORMAT),
+                getFutureDateString(
+                    Constants.API_QUERY_DATE_FORMAT,
+                    Constants.DEFAULT_END_DATE_DAYS
+                )
+            )
+        }
+    }
+
+    suspend fun getAllAsteroids(): List<Asteroid> {
+        return withContext(Dispatchers.IO) {
+            database.asteroidDao.getAllAsteroids()
+        }
+
+    }
+
+    suspend fun getPictureOfDay(): PictureOfDay {
+        return withContext(Dispatchers.IO) {
+            picture.retrofitService.getPictureOfDay(Constants.PRIVATE_KEY)
+        }
+    }
+
 
     private fun parseAsteroids(response: String): List<Asteroid> {
         return try {

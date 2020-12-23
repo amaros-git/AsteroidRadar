@@ -38,10 +38,6 @@ class MainFragment : Fragment() {
         })
         binding.asteroidRecycler.adapter = adapter
 
-        viewModel.asteroids.observe(viewLifecycleOwner) {
-            adapter.submitMyList(it, false)
-        }
-
         viewModel.todayAsteroids.observe(viewLifecycleOwner) {
             if (it.isEmpty()) {
                 Toast.makeText(context, "No today's asteroids", Toast.LENGTH_SHORT)
@@ -49,10 +45,17 @@ class MainFragment : Fragment() {
             }
             adapter.submitMyList(it, false)
         }
+        viewModel.weekAsteroids.observe(viewLifecycleOwner) {
+            adapter.submitMyList(it, false)
+        }
+        viewModel.allAsteroids.observe(viewLifecycleOwner) {
+            adapter.submitMyList(it, false)
+        }
 
         viewModel.showToastEvent.observe(viewLifecycleOwner) {
             it?.let {
                 Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+                viewModel.showEventProcessed()
             }
         }
 
