@@ -18,9 +18,9 @@ private val moshi = Moshi.Builder()
     .build()
 
 private val okHttpClient = OkHttpClient.Builder()
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(30, TimeUnit.SECONDS)
-        .build()
+    .connectTimeout(30, TimeUnit.SECONDS)
+    .readTimeout(30, TimeUnit.SECONDS)
+    .build()
 
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(ScalarsConverterFactory.create())
@@ -52,13 +52,13 @@ interface PictureApiService {
 }
 
 object AsteroidRadarApi {
-    val retrofitService : AsteroidRadarApiService by lazy {
+    val retrofitService: AsteroidRadarApiService by lazy {
         retrofit.create(AsteroidRadarApiService::class.java)
     }
 }
 
 object PictureApi {
-    val retrofitService : PictureApiService by lazy {
+    val retrofitService: PictureApiService by lazy {
         pictureRetrofit.create(PictureApiService::class.java)
     }
 }

@@ -2,11 +2,11 @@ package com.udacity.asteroidradar
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.udacity.asteroidradar.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity() {
 

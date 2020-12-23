@@ -19,8 +19,7 @@ class AsteroidRadarRepository(
     private val database: AsteroidRadarDatabase,
     private val radar: AsteroidRadarApi,
     private val picture: PictureApi
-    ) {
-
+) {
 
     /**
      * @throws JSONException
@@ -87,10 +86,9 @@ class AsteroidRadarRepository(
     private fun updateDatabase(asteroids: List<Asteroid>) {
         database.asteroidDao.deleteByDate(getDateString(Constants.API_QUERY_DATE_FORMAT, -1))
 
-        if(asteroids.isNotEmpty()) {
+        if (asteroids.isNotEmpty()) {
             val asteroidsArray = asteroids.toTypedArray()
             database.asteroidDao.insertAllAsteroids(*asteroidsArray)
         }
-
     }
 }

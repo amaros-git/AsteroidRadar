@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
+
 class AsteroidRadarApplication : Application() {
 
     private val applicationScope = CoroutineScope(Dispatchers.Default)

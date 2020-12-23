@@ -9,10 +9,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.udacity.asteroidradar.Asteroid
-import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
-import com.udacity.asteroidradar.utils.getDateString
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -33,6 +31,7 @@ class MainFragment : Fragment() {
     }
 
     private lateinit var adapter: AsteroidRecyclerAdapter
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,7 +63,7 @@ class MainFragment : Fragment() {
 
         }
         viewModel.weekAsteroids.observe(viewLifecycleOwner) {
-            it?.let{
+            it?.let {
                 refreshAdapter(it)
                 adapter.submitMyList(it, false)
                 viewModel.clearWeekAsteroidsData()
@@ -117,6 +116,10 @@ class MainFragment : Fragment() {
         return true
     }
 
+    /**
+     * removes all items from recycler view to have some animation
+     * when I change filter in menu
+     */
     private fun refreshAdapter(list: List<Asteroid>) {
         for (i in list.indices) {
             adapter.notifyItemRemoved(i)

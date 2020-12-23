@@ -9,13 +9,16 @@ import androidx.databinding.BindingAdapter
 import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.main.NetworkRequestStatus
 
+
 @BindingAdapter("statusIcon")
 fun ImageView.setAsteroidIcon(item: Asteroid?) {
     item?.let {
-        setImageResource(when (item.isPotentiallyHazardous) {
-            true -> R.drawable.ic_status_potentially_hazardous
-            else -> R.drawable.ic_status_normal
-        })
+        setImageResource(
+            when (item.isPotentiallyHazardous) {
+                true -> R.drawable.ic_status_potentially_hazardous
+                else -> R.drawable.ic_status_normal
+            }
+        )
     }
 }
 
@@ -39,9 +42,9 @@ fun bindPictureDescription(imageView: ImageView, picture: PictureOfDay?) {
     if (null != picture) {
         imageView.contentDescription =
             imageView.context.getString(
-                R.string.nasa_picture_of_day_content_description_format, picture.title)
-    }
-    else {
+                R.string.nasa_picture_of_day_content_description_format, picture.title
+            )
+    } else {
         imageView.contentDescription =
             imageView.context.getString(R.string.this_is_nasa_s_picture_of_day_showing_nothing_yet)
     }
@@ -94,6 +97,7 @@ fun bindStatus(progressBar: ProgressBar, status: NetworkRequestStatus?) {
         NetworkRequestStatus.DONE -> {
             progressBar.visibility = View.GONE
         }
-        else -> {/*error out of scope */}
+        else -> {/*error out of scope */
+        }
     }
 }

@@ -7,7 +7,7 @@ import com.udacity.asteroidradar.database.getDatabase
 import com.udacity.asteroidradar.network.AsteroidRadarApi
 import com.udacity.asteroidradar.network.PictureApi
 import com.udacity.asteroidradar.repository.AsteroidRadarRepository
-import timber.log.Timber
+
 
 class RefreshCacheWork(context: Context, params: WorkerParameters) :
     CoroutineWorker(context, params) {

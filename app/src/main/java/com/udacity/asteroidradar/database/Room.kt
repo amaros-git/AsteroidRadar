@@ -1,12 +1,11 @@
 package com.udacity.asteroidradar.database
 
 import android.content.Context
-import androidx.lifecycle.LiveData
-
 import androidx.room.*
 import com.udacity.asteroidradar.Asteroid
 
-const val DATABASE_NAME = "videos"
+
+const val DATABASE_NAME = "asteroids"
 
 @Dao
 interface AsteroidRadarDao {
@@ -16,8 +15,10 @@ interface AsteroidRadarDao {
     @Query("SELECT * FROM asteroids WHERE close_approach_date = :date")
     fun getTodayAsteroid(date: String): List<Asteroid>
 
-    @Query("SELECT * FROM asteroids WHERE close_approach_date >= :startDate " +
-            "AND close_approach_date<= :endDate ORDER BY close_approach_date ASC")
+    @Query(
+        "SELECT * FROM asteroids WHERE close_approach_date >= :startDate " +
+                "AND close_approach_date<= :endDate ORDER BY close_approach_date ASC"
+    )
     fun getWeekAsteroid(startDate: String, endDate: String): List<Asteroid>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -28,7 +29,7 @@ interface AsteroidRadarDao {
 }
 
 @Database(entities = [Asteroid::class], version = 1)
-abstract class AsteroidRadarDatabase: RoomDatabase() {
+abstract class AsteroidRadarDatabase : RoomDatabase() {
     abstract val asteroidDao: AsteroidRadarDao
 }
 

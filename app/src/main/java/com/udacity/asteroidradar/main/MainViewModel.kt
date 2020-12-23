@@ -3,8 +3,6 @@ package com.udacity.asteroidradar.main
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Picture
-import androidx.core.content.edit
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.PictureOfDay
@@ -18,15 +16,16 @@ import retrofit2.HttpException
 import timber.log.Timber
 import java.net.SocketTimeoutException
 
+
 enum class NetworkRequestStatus { LOADING, ERROR, DONE }
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
-
     //Didn't find better solution yet to restore Recycler View data
     //on navigation back. Week is default on ViewModel creation
     //Initial value shall be none to avoid double read from database
     //because when viewModel is created it calls week asteroids
     private enum class LiveDataType { TODAY, WEEK, ALL, NONE }
+
     private var currentLiveDataType = LiveDataType.NONE
 
     private val sharedPref: SharedPreferences =
@@ -74,12 +73,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             val asteroids = asteroidRepository.getTodayAsteroid()
             if (asteroids.isEmpty()) {
-                _showToastEvent.value = "Cannot find today asteroids. Please try to refresh."
+                refreshCache()
+            } else {
+                _todayAsteroids.value = asteroids
+                currentLiveDataType = LiveDataType.TODAY
+                getPictureOfDay()
             }
-            _todayAsteroids.value = asteroids
-            currentLiveDataType = LiveDataType.TODAY
-
-            getPictureOfDay()
         }
     }
 
@@ -88,7 +87,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 val picture = asteroidRepository.getPictureOfDay()
                 //Cache picture
-                with (sharedPref.edit()) {
+                with(sharedPref.edit()) {
                     putString("mediaType", picture.mediaType)
                     putString("url", picture.url)
                     putString("title", picture.title)
@@ -140,7 +139,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    suspend fun refreshCache()  {
+    suspend fun refreshCache() {
         getPictureOfDay()
 
         _networkRequestStatus.value = NetworkRequestStatus.LOADING
@@ -192,12 +191,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         _navigateToDetailsEvent.value = null
     }
 
+    /**
+     * it is used to restore RecyclerView content
+     * when navigates back from DetailFragment
+     */
     fun refreshRecycler() {
         if (currentLiveDataType == LiveDataType.TODAY) {
             getTodayAsteroids()
         }
         if (currentLiveDataType == LiveDataType.WEEK) {
-           getWeekAsteroids()
+            getWeekAsteroids()
         }
         if (currentLiveDataType == LiveDataType.ALL) {
             getAllAsteroids()
